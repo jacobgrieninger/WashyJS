@@ -1,0 +1,11 @@
+{
+  "name": "washyjs",
+  "version": "1.0.0",
+  "description": "Discord bot to let us know if we should get a car wash today!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jacob Grieninger",
+  "license": "ISC"
+}

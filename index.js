@@ -12,9 +12,9 @@ async function getForecast() {
     rainyDays: [],
     rainPercent: [],
   };
-  const now = moment.utc();
-  const startTime = moment.utc(now).add(0, "minutes").toISOString();
-  const endTime = moment.utc(now).add(5, "days").toISOString();
+  let now = moment.utc();
+  let startTime = moment.utc(now).add(0, "minutes").toISOString();
+  let endTime = moment.utc(now).add(5, "days").toISOString();
 
   await axios
     .get(
@@ -44,14 +44,27 @@ const client = new Client({
 // When the client is ready, run this code (only once)
 client.once("ready", () => {
   console.log("Ready!");
-  const job = schedule.scheduleJob("0 6 * * *", async function () {
+  const job = schedule.scheduleJob("0 12 * * *", async function () {
     (async () => {
       let result = await getForecast();
       console.log(result);
+      let weatherStr = "";
+      for (let i = 0; i < result.rainyDays.length; i++) {
+        weatherStr +=
+          result.rainyDays[i].toString() +
+          " | " +
+          result.rainPercent[i].toString() +
+          "%" +
+          "\n";
+      }
       if (result.willRain == true) {
         client.channels.cache
           .find((channel) => channel.name == "washy")
-          .send("Today is not a good day to get a car wash!");
+          .send(
+            "Today is not a good day to get a car wash!" +
+              "\n" +
+              `> ${weatherStr}`
+          );
       } else {
         client.channels.cache
           .find((channel) => channel.name == "washy")
